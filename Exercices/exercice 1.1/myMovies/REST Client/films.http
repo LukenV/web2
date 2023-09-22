@@ -1,0 +1,20 @@
+### Read all films with File variable
+@baseUrl = http://localhost:3000
+GET {{baseUrl}}/films
+
+### Read all films sorted by minimum-duration
+GET {{baseUrl}}/films/?minimum-duration=119
+
+### Get a film from the list
+GET {{baseUrl}}/films/2
+
+### Create a new film
+POST {{baseUrl}}/films
+Content-Type: application/json
+
+{
+    "title":"Jurasic Parc",
+    "duration":119,
+    "budget":345000,
+    "link":"https://"
+}

@@ -15,15 +15,7 @@ app.use( (req, res, next) => {
 
     const requestInfos = req.method + " " + req.path;
 
-    if ( requests[ requestInfos ] === undefined ) {
-
-        requests [ requestInfos ] = 1;
-
-    } else {
-
-        requests [ requestInfos ] ++;
-
-    }
+    requests[requestInfos] === undefined ? requests[requestInfos] = 1 : requests[requestInfos]++;
 
     let string = "Request counter :\n";
 
@@ -31,7 +23,7 @@ app.use( (req, res, next) => {
 
     for ( let i=0; i<requestEntries.length; i++ ) {
 
-        string += " -\t" + requestEntries[i][0] + " : " + requestEntries[i][1] + "\n";
+        string += " - " + requestEntries[i][0] + " : " + requestEntries[i][1] + "\n";
 
     }
 
