@@ -13,8 +13,8 @@ POST {{baseUrl}}/films
 Content-Type: application/json
 
 {
-    "title":"Jurasic Parc",
-    "duration":119,
-    "budget":345000,
-    "link":"https://"
+    "title" : "Jurasic Parc",
+    "duration" : 119,
+    "budget" : 345000,
+    "link" : "https://"
 }
