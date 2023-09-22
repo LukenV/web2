@@ -2,8 +2,17 @@
 @baseUrl = http://localhost:3000
 GET {{baseUrl}}/films
 
-### Read all films sorted by minimum-duration
+### Read all films filtered by minimum-duration
 GET {{baseUrl}}/films/?minimum-duration=119
+
+### Read all films filtered by a prefix
+GET {{baseUrl}}/films/?title-starts-with=Harry
+
+### Read all films sorted by title ascending order
+GET {{baseUrl}}/films/?order=title
+
+### Read all films sorted by title descending order
+GET {{baseUrl}}/films/?order=-title
 
 ### Get a film from the list
 GET {{baseUrl}}/films/2

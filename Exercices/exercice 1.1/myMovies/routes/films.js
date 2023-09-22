@@ -29,22 +29,32 @@ const FILMS = [
 router.get('/', function(req, res, next) {
 
     const minimumDuration = parseInt( req.query[ "minimum-duration" ] ) > 0 ? parseInt( req.query[ "minimum-duration" ] ) : undefined;
+    const prefixTitle = req?.query[ "title-starts-with" ]?.length !== 0 ? req.query[ "title-starts-with" ] : undefined;
+    const orderTitle = req?.query?.order?.includes( "title" ) ? req.query.order : undefined;
 
-
-    console.log( minimumDuration );
-    console.log( typeof minimumDuration );
-
-    let filteredFilms;
+    let alteredFilms;
 
     if ( minimumDuration ) {
 
-        filteredFilms = FILMS.filter( a => a.duration > minimumDuration );
+        alteredFilms = [...FILMS].filter( a => a.duration > minimumDuration );
 
     }
 
-    console.log( JSON.stringify( filteredFilms ) )
+    if ( prefixTitle ) {
+        
+        alteredFilms = [...FILMS].filter( a => a.title.startsWith( prefixTitle ) );
 
-    res.json( filteredFilms ?? FILMS );
+    }
+
+    if ( orderTitle ) {
+
+        alteredFilms = [...FILMS].sort( (a, b) => a.title.localeCompare( b.title ) );
+
+        if ( orderTitle === "-title" ) alteredFilms.reverse();
+
+    }
+
+    res.json( alteredFilms ?? FILMS );
 
 });
 
