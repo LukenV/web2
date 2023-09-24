@@ -92,4 +92,41 @@ router.get('/:id', (req, res) => {
 
 });
 
+// Delete a pizza from the menu based on its id
+router.delete('/:id', (req, res) => {
+  console.log(`DELETE /pizzas/${req.params.id}`);
+
+  const foundIndex = MENU.findIndex(pizza => pizza.id == req.params.id);
+
+  if (foundIndex < 0) return res.sendStatus(404);
+
+  const itemsRemovedFromMenu = MENU.splice(foundIndex, 1);
+  const itemRemoved = itemsRemovedFromMenu[0];
+
+  res.json(itemRemoved);
+});
+
+// Update a pizza based on its id and new values for its parameters
+router.patch('/:id', (req, res) => {
+  console.log(`PATCH /pizzas/${req.params.id}`);
+
+  const title = req?.body?.title;
+  const content = req?.body?.content;
+
+  console.log('POST /pizzas');
+
+  if ((!title && !content) || title?.length === 0 || content?.length === 0) return res.sendStatus(400);
+
+  const foundIndex = MENU.findIndex(pizza => pizza.id == req.params.id);
+
+  if (foundIndex < 0) return res.sendStatus(404);
+
+  const updatedPizza = {...MENU[foundIndex], ...req.body};
+
+  MENU[foundIndex] = updatedPizza;
+
+  res.json(updatedPizza);
+});
+
+
 module.exports = router;
