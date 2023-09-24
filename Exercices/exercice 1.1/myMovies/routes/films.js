@@ -25,32 +25,96 @@ const FILMS = [
     }
 ];
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
+// For pagination system
 
-    const minimumDuration = parseInt( req.query[ "minimum-duration" ] ) > 0 ? parseInt( req.query[ "minimum-duration" ] ) : undefined;
-    const prefixTitle = req?.query[ "title-starts-with" ]?.length !== 0 ? req.query[ "title-starts-with" ] : undefined;
-    const orderTitle = req?.query?.order?.includes( "title" ) ? req.query.order : undefined;
+const paginatedResults = model => {
+
+    return (req, res, next) => {
+
+        const page = parseInt( req?.query?.page ) > 0 ? parseInt( req.query.page ) : undefined;
+        const limit = parseInt( req?.query?.limit ) > 0 ? parseInt( req.query.limit ) : undefined;
+
+        console.log( "page : " + page );
+        console.log( "limit : " + limit );
+
+        if ( page && limit ) {
+
+            const results = {};
+
+            const startIndex = (page - 1) * limit;
+            const endIndex = page * limit;
+
+            if ( endIndex < FILMS.length ) {
+
+                results.next = {
+                    page: page + 1,
+                    limit: limit
+                }
+
+            }
+
+            if ( startIndex > 0 ) {
+
+                results.previous = {
+                    page: page - 1,
+                    limit: limit
+                }
+
+            }
+
+            results.results = model.slice( startIndex, endIndex );
+
+            res.paginatedResults = results;
+            next();
+
+        };
+
+    };
+
+};
+
+/* GET users listing. */
+router.get('/', paginatedResults( FILMS ), (req, res, next) =>{
 
     let alteredFilms;
+
+    // For minimum duration filtering
+
+    const minimumDuration = parseInt( req.query[ "minimum-duration" ] ) > 0 ? parseInt( req.query[ "minimum-duration" ] ) : undefined;
 
     if ( minimumDuration ) {
 
         alteredFilms = [...FILMS].filter( a => a.duration > minimumDuration );
 
-    }
+    };
 
+    // For prefixTitle filtering
+
+    const prefixTitle = req?.query[ "title-starts-with" ]?.length !== 0 ? req.query[ "title-starts-with" ] : undefined;
+    
     if ( prefixTitle ) {
         
         alteredFilms = [...FILMS].filter( a => a.title.startsWith( prefixTitle ) );
 
-    }
+    };
+
+    // For title ordering
+
+    const orderTitle = req?.query?.order?.includes( "title" ) ? req.query.order : undefined;
 
     if ( orderTitle ) {
 
         alteredFilms = [...FILMS].sort( (a, b) => a.title.localeCompare( b.title ) );
 
         if ( orderTitle === "-title" ) alteredFilms.reverse();
+
+    };
+
+    // For pagination system
+
+    if ( !alteredFilms ) {
+
+        alteredFilms = res.paginatedResults;
 
     }
 

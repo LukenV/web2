@@ -3,16 +3,16 @@
 GET {{baseUrl}}/films
 
 ### Read all films filtered by minimum-duration
-GET {{baseUrl}}/films/?minimum-duration=119
+GET {{baseUrl}}/films?minimum-duration=119
 
 ### Read all films filtered by a prefix
-GET {{baseUrl}}/films/?title-starts-with=Harry
+GET {{baseUrl}}/films?title-starts-with=Harry
 
 ### Read all films sorted by title ascending order
-GET {{baseUrl}}/films/?order=title
+GET {{baseUrl}}/films?order=title
 
 ### Read all films sorted by title descending order
-GET {{baseUrl}}/films/?order=-title
+GET {{baseUrl}}/films?order=-title
 
 ### Get a film from the list
 GET {{baseUrl}}/films/2
@@ -27,3 +27,9 @@ Content-Type: application/json
     "budget" : 345000,
     "link" : "https://"
 }
+
+### Pagination system
+GET {{baseUrl}}/films?page=1&limit=2
+
+### Pagination system
+GET {{baseUrl}}/films?page=2&limit=2
