@@ -1,0 +1,69 @@
+### Read all movies with File variable
+@baseUrl = http://localhost:3000
+GET {{baseUrl}}/movies
+
+### Read all movies filtered by minimum-duration
+GET {{baseUrl}}/movies?minimum-duration=119
+
+### Read all movies filtered by a prefix
+GET {{baseUrl}}/movies?title-starts-with=Harry
+
+### Read all movies sorted by title ascending order
+GET {{baseUrl}}/movies?order=title
+
+### Read all movies sorted by title descending order
+GET {{baseUrl}}/movies?order=-title
+
+### Get a movie from the list
+GET {{baseUrl}}/movies/20
+
+### Create a new movie
+POST {{baseUrl}}/movies
+Content-Type: application/json
+
+{
+    "title" : "Jurasic Parc",
+    "duration" : 119,
+    "budget" : 345000,
+    "link" : "https://"
+}
+
+### Pagination system
+GET {{baseUrl}}/movies?page=2&limit=4
+
+### Delete one movie
+DELETE {{baseUrl}}/movies/8
+
+### Edit one movie
+PATCH {{baseUrl}}/movies/6
+Content-Type: application/json
+
+{
+    "title" : "Jurasic Parc : Evolved",
+    "duration" : 12,
+    "budget" : 2432000,
+    "link" : "https://"
+}
+
+### Update the movie identified by 6
+PUT {{baseUrl}}/movies/23
+Content-Type: application/json
+
+{
+    "title" : "Megaman",
+    "duration" : 129,
+    "budget" : 333000,
+    "link" : "https://megaman.com"
+}
+
+### Update the pizza identified by 3
+PUT {{baseUrl}}/movies/3
+Content-Type: application/json
+
+{
+    "title" : "Megaman",
+    "duration" : 129,
+    "budget" : 333000,
+    "link" : "https://megaman.com"
+}
+
