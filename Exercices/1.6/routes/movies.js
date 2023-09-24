@@ -178,6 +178,8 @@ router.delete('/:id', (req, res) => {
 
 });
 
+// PATCH update one movie (min. one attribute)
+
 router.patch('/:id', (req, res) => {
 
     const title = req?.body?.title ? req.body.title : undefined;
@@ -198,6 +200,8 @@ router.patch('/:id', (req, res) => {
     return res.json( updatedMovie );
 
 });
+
+// PUT update one movie (all attributes) OR add a new one with all of the attributes
 
 router.put('/:id', (req, res) => {
 
