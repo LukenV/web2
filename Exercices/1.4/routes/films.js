@@ -1,5 +1,7 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+
+// "FILMS" array
 
 const FILMS = [
     {
@@ -15,6 +17,13 @@ const FILMS = [
         duration: 121,
         budget: 11000000,
         link: "https://www.example.com/star-wars"
+    },
+    {
+        id: 3,
+        title: "Inception",
+        duration: 148,
+        budget: 160000000,
+        link: "https://www.example.com/inception"
     },
     {
         id: 4,
@@ -137,102 +146,121 @@ const FILMS = [
     }
 ];
 
-// For pagination system
+// Pagination algorithm
 
-const paginatedResults = model => {
+const paginatedResults = (model, page, limit) => {
 
-    return (req, res, next) => {
+    const results = {};
 
-        const page = parseInt( req?.query?.page ) > 0 ? parseInt( req.query.page ) : undefined;
-        const limit = parseInt( req?.query?.limit ) > 0 ? parseInt( req.query.limit ) : undefined;
+    const startIndex = ( page - 1 ) * limit;
+    const endIndex = page * limit;
 
-        console.log( "page : " + page );
-        console.log( "limit : " + limit );
+    if ( endIndex < FILMS.length ) {
 
-        if ( page && limit ) {
+        results.next = {
 
-            const results = {};
+            page: page + 1,
+            limit: limit
 
-            const startIndex = (page - 1) * limit;
-            const endIndex = page * limit;
+        }
 
-            if ( endIndex < FILMS.length ) {
+    }
 
-                results.next = {
-                    page: page + 1,
-                    limit: limit
-                }
+    if ( startIndex > 0 ) {
 
-            }
+        results.previous = {
 
-            if ( startIndex > 0 ) {
+            page: page - 1,
+            limit: limit
 
-                results.previous = {
-                    page: page - 1,
-                    limit: limit
-                }
+        }
 
-            }
+    }
 
-            results.results = model.slice( startIndex, endIndex );
+    results.results = model.slice( startIndex, endIndex );
 
-            res.paginatedResults = results;
-            next();
-
-        };
-
-    };
+    return results;
 
 };
 
-/* GET users listing. */
-router.get('/', paginatedResults( FILMS ), (req, res, next) =>{
+// GET movies listing
 
-    let alteredFilms;
+router.get('/', (req, res, next) =>{
 
-    // For minimum duration filtering
+    let alteredFilms = undefined;
 
-    const minimumDuration = parseInt( req.query[ "minimum-duration" ] ) > 0 ? parseInt( req.query[ "minimum-duration" ] ) : undefined;
+    // Minimum duration filtering
+
+    const minimumDuration = parseInt( req?.query?.[ "minimum-duration" ] ) ? parseInt( req.query[ "minimum-duration" ] ) : undefined;
 
     if ( minimumDuration ) {
+
+        console.log( "Minimum duration" );
+
+        if ( minimumDuration <= 0 ) return res.sendStatus( 400 );
+
+        console.log( minimumDuration );
 
         alteredFilms = [...FILMS].filter( a => a.duration > minimumDuration );
 
     };
 
-    // For prefixTitle filtering
+    // PrefixTitle filtering
 
-    const prefixTitle = req?.query[ "title-starts-with" ]?.length !== 0 ? req.query[ "title-starts-with" ] : undefined;
+    const prefixTitle = req?.query?.[ "title-starts-with" ] ? req.query[ "title-starts-with" ] : undefined;
     
     if ( prefixTitle ) {
+
+        console.log( "Prefix title" );
+
+        if ( prefixTitle.length === 0 ) return res.sendStatus( 400 );
         
         alteredFilms = [...FILMS].filter( a => a.title.startsWith( prefixTitle ) );
 
+        if ( alteredFilms.length === 0 ) return res.sendStatus( 404 );
+
     };
 
-    // For title ordering
+    // Title ordering
 
-    const orderTitle = req?.query?.order?.includes( "title" ) ? req.query.order : undefined;
+    const orderTitle = req?.query?.order ? req.query.order : undefined;
 
     if ( orderTitle ) {
 
-        alteredFilms = [...FILMS].sort( (a, b) => a.title.localeCompare( b.title ) );
+        console.log( "Ordering by title" );
 
-        if ( orderTitle === "-title" ) alteredFilms.reverse();
+        if ( !orderTitle.includes( "title" ) || orderTitle !== "title" || orderTitle !== "-title" ) return res.sendStatus( 400 );
+
+        alteredFilms = [...FILMS].sort( (a, b) => a.title.localeCompare( b.title ) );
+        
+        if ( orderTitle === "-title" ) {
+            
+            alteredFilms.reverse();
+        
+        };
 
     };
 
-    // For pagination system
+    // Pagination system
 
-    if ( !alteredFilms ) {
+    const page = parseInt( req?.query?.page ) ? parseInt( req.query.page ) : undefined;
+    const limit = parseInt( req?.query?.limit ) ? parseInt( req.query.limit ) : undefined;
 
-        alteredFilms = res.paginatedResults;
+    if ( page && limit ) {
 
-    }
+        console.log( "Pagination system" );
 
-    res.json( alteredFilms ?? FILMS );
+        if ( page <= 0 ) return res.sendStatus( 400 );
+
+        alteredFilms = paginatedResults( [...FILMS], page, limit );
+
+    };
+
+    return res.json( alteredFilms ?? FILMS );
 
 });
+
+// GET one movie by its id
 
 router.get('/:id', (req, res) => {
     
@@ -244,6 +272,8 @@ router.get('/:id', (req, res) => {
 
 });
 
+// POST create one movie
+
 router.post('/', (req, res) => {
 
     const title = req?.body?.title?.length !== 0 ? req.body.title : undefined;
@@ -251,7 +281,9 @@ router.post('/', (req, res) => {
     const budget = parseInt( req?.body?.budget ) > 0 ? req.body.budget : undefined;
     const link = req?.body?.link?.length !== 0 ? req.body.link : undefined;
 
-    if ( !title || !duration || !budget || !link ) res.sendStatus( 400 );
+    if ( !title || !duration || !budget || !link ) return res.sendStatus( 400 );
+
+    if ( [...FILMS].find( x => x.title.toLowerCase() === titletoLowerCase() ) ) return res.sendStatus( 409 );
 
     const lastFilmIndex = FILMS?.length !== 0 ? FILMS.length - 1 : undefined;
     const lastFilmId = lastFilmIndex !== undefined ? FILMS[lastFilmIndex]?.id : 0;
@@ -269,7 +301,7 @@ router.post('/', (req, res) => {
 
     FILMS.push( newFilm );
 
-    res.json( newFilm );
+    return res.json( newFilm );
 
 });
 

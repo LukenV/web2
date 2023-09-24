@@ -5,8 +5,14 @@ GET {{baseUrl}}/films
 ### Read all films filtered by minimum-duration
 GET {{baseUrl}}/films?minimum-duration=119
 
+### Read all films filtered by minimum-duration
+GET {{baseUrl}}/films?minimum-duration=-1
+
 ### Read all films filtered by a prefix
 GET {{baseUrl}}/films?title-starts-with=Harry
+
+### Read all films filtered by a prefix
+GET {{baseUrl}}/films?title-starts-with=HarryPoPoPOtter
 
 ### Read all films sorted by title ascending order
 GET {{baseUrl}}/films?order=title
@@ -15,7 +21,7 @@ GET {{baseUrl}}/films?order=title
 GET {{baseUrl}}/films?order=-title
 
 ### Get a film from the list
-GET {{baseUrl}}/films/2
+GET {{baseUrl}}/films/21
 
 ### Create a new film
 POST {{baseUrl}}/films
@@ -29,7 +35,4 @@ Content-Type: application/json
 }
 
 ### Pagination system
-GET {{baseUrl}}/films?page=1&limit=2
-
-### Pagination system
-GET {{baseUrl}}/films?page=2&limit=2
+GET {{baseUrl}}/films?page=2&limit=10
