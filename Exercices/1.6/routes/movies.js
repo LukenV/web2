@@ -1,5 +1,8 @@
 const express = require('express');
+const { serialize, parse } = require('../utils/json');
 const router = express.Router();
+
+const jsonDbPath = __dirname + '/../data/movies.json';
 
 // "MOVIES" array
 
@@ -44,9 +47,11 @@ const paginatedResults = (model, page, limit) => {
 
 // GET movies listing
 
-router.get('/', (req, res, next) =>{
+router.get('/', (req, res, next) => {
 
     let alteredMoviesArray = undefined;
+
+    const movies = parse( jsonDbPath, MOVIES );
 
     // Minimum duration filtering
 
@@ -60,7 +65,7 @@ router.get('/', (req, res, next) =>{
 
         console.log( minimumDuration );
 
-        alteredMoviesArray = [...MOVIES].filter( a => a.duration > minimumDuration );
+        alteredMoviesArray = [...movies].filter( a => a.duration > minimumDuration );
 
     };
 
@@ -74,7 +79,7 @@ router.get('/', (req, res, next) =>{
 
         if ( prefixTitle.length === 0 ) return res.sendStatus( 400 );
         
-        alteredMoviesArray = [...MOVIES].filter( a => a.title.startsWith( prefixTitle ) );
+        alteredMoviesArray = [...movies].filter( a => a.title.startsWith( prefixTitle ) );
 
         if ( alteredMoviesArray.length === 0 ) return res.sendStatus( 404 );
 
@@ -88,9 +93,9 @@ router.get('/', (req, res, next) =>{
 
         console.log( "Ordering by title" );
 
-        if ( !orderTitle.includes( "title" ) || orderTitle !== "title" || orderTitle !== "-title" ) return res.sendStatus( 400 );
+        if ( !orderTitle.includes( "title" ) ) return res.sendStatus( 400 );
 
-        alteredMoviesArray = [...MOVIES].sort( (a, b) => a.title.localeCompare( b.title ) );
+        alteredMoviesArray = [...movies].sort( (a, b) => a.title.localeCompare( b.title ) );
         
         if ( orderTitle === "-title" ) {
             
@@ -111,23 +116,25 @@ router.get('/', (req, res, next) =>{
 
         if ( page <= 0 ) return res.sendStatus( 400 );
 
-        alteredMoviesArray = paginatedResults( [...MOVIES], page, limit );
+        alteredMoviesArray = paginatedResults( [...movies], page, limit );
 
     };
 
-    return res.json( alteredMoviesArray ?? MOVIES );
+    return res.json( alteredMoviesArray ?? movies );
 
 });
 
 // GET one movie by its id
 
 router.get('/:id', (req, res) => {
+
+    const movies = parse( jsonDbPath, MOVIES );
     
-    const filmIndex = MOVIES.findIndex( film => film.id === parseInt( req.params.id ) );
+    const filmIndex = movies.findIndex( film => film.id === parseInt( req.params.id ) );
 
     if ( filmIndex < 0 ) return res.sendStatus( 404 );
   
-    res.json( MOVIES[filmIndex] );
+    res.json( movies[filmIndex] );
 
 });
 
@@ -142,10 +149,12 @@ router.post('/', (req, res) => {
 
     if ( !title || !duration || !budget || !link ) return res.sendStatus( 400 );
 
-    if ( MOVIES.find( x => x.title.toLowerCase() === titletoLowerCase() ) ) return res.sendStatus( 409 );
+    const movies = parse( jsonDbPath, MOVIES );
 
-    const lastFilmIndex = MOVIES?.length !== 0 ? MOVIES.length - 1 : undefined;
-    const lastFilmId = lastFilmIndex !== undefined ? MOVIES[lastFilmIndex]?.id : 0;
+    if ( movies.find( x => x.title.toLowerCase() === title.toLowerCase() ) ) return res.sendStatus( 409 );
+
+    const lastFilmIndex = movies?.length !== 0 ? movies.length - 1 : undefined;
+    const lastFilmId = lastFilmIndex !== undefined ? movies[lastFilmIndex]?.id : 0;
     const nextId = lastFilmId + 1;
 
     const newFilm = {
@@ -158,7 +167,9 @@ router.post('/', (req, res) => {
 
     };
 
-    MOVIES.push( newFilm );
+    movies.push( newFilm );
+
+    serialize(jsonDbPath, movies);
 
     return res.json( newFilm );
 
@@ -172,7 +183,11 @@ router.delete('/:id', (req, res) => {
 
     if ( indexMovieFound < 0 ) return res.sendStatus( 404 );
 
-    const moviesRemoved = MOVIES.splice( indexMovieFound, 1 );
+    const movies = parse( jsonDbPath, MOVIES );
+
+    const moviesRemoved = movies.splice( indexMovieFound, 1 );
+
+    serialize( jsonDbPath, movies );
     
     return res.json( moviesRemoved );
 
@@ -189,13 +204,17 @@ router.patch('/:id', (req, res) => {
 
     if ( ( !title && !duration && !budget && !link ) || title?.length === 0 || duration <= 0 || budget <= 0 || link?.length === 0 ) return res.sendStatus( 400 );
 
-    const indexMovieFound = MOVIES.findIndex( movie => movie.id === parseInt( req.params.id ) );
+    const movies = parse( jsonDbPath, MOVIES );
+    
+    const indexMovieFound = movies.findIndex( movie => movie.id === parseInt( req.params.id ) );
 
     if ( indexMovieFound < 0 ) return res.sendStatus( 404 );
 
-    const updatedMovie = { ...MOVIES[indexMovieFound], ...req.body };
+    const updatedMovie = { ...movies[indexMovieFound], ...req.body };
 
-    MOVIES[indexMovieFound] = updatedMovie;
+    movies[indexMovieFound] = updatedMovie;
+
+    serialize( jsonDbPath, movies );
     
     return res.json( updatedMovie );
 
@@ -212,23 +231,27 @@ router.put('/:id', (req, res) => {
 
     if ( ( !title || !duration || !budget || !link ) || title?.length === 0 || duration <= 0 || budget <= 0 || link?.length === 0 ) return res.sendStatus( 400 );
 
-    const indexMovieFound = MOVIES.findIndex( movie => movie.id === parseInt( req.params.id ) );
+    const movies = parse( jsonDbPath, MOVIES );
 
-    console.log( indexMovieFound );
+    const indexMovieFound = movies.findIndex( movie => movie.id === parseInt( req.params.id ) );
 
     if ( indexMovieFound < 0 ) {
 
         const newMovie = { id : parseInt( req.params.id ), ...req.body };
 
-        MOVIES[ MOVIES.length - 1 ] = newMovie;
+        movies[ MOVIES.length - 1 ] = newMovie;
+
+        serialize( jsonDbPath, movies );
 
         return res.json( newMovie );
 
     }
 
-    const updatedMovie = { ...MOVIES[indexMovieFound], ...req.body };
+    const updatedMovie = { ...movies[indexMovieFound], ...req.body };
 
-    MOVIES[indexMovieFound] = updatedMovie;
+    movies[indexMovieFound] = updatedMovie;
+
+    serialize( jsonDbPath, movies );
     
     return res.json( updatedMovie );
 
