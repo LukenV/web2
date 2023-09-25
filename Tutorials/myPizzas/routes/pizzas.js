@@ -1,34 +1,34 @@
-const express = require('express');
-const { serialize, parse } = require('../utils/json');
+const express = require("express");
+const { serialize, parse } = require("../utils/json");
 const router = express.Router();
 
-const jsonDbPath = __dirname + '/../data/pizzas.json';
+const jsonDbPath = __dirname + "/../data/pizzas.json";
 
 const MENU = [
   {
     id: 1,
-    title: '4 fromages',
-    content: 'Gruyère, Sérac, Appenzel, Gorgonzola, Tomates',
+    title: "4 fromages",
+    content: "Gruyère, Sérac, Appenzel, Gorgonzola, Tomates",
   },
   {
     id: 2,
-    title: 'Vegan',
-    content: 'Tomates, Courgettes, Oignons, Aubergines, Poivrons',
+    title: "Vegan",
+    content: "Tomates, Courgettes, Oignons, Aubergines, Poivrons",
   },
   {
     id: 3,
-    title: 'Vegetarian',
-    content: 'Mozarella, Tomates, Oignons, Poivrons, Champignons, Olives',
+    title: "Vegetarian",
+    content: "Mozarella, Tomates, Oignons, Poivrons, Champignons, Olives",
   },
   {
     id: 4,
-    title: 'Alpage',
-    content: 'Gruyère, Mozarella, Lardons, Tomates',
+    title: "Alpage",
+    content: "Gruyère, Mozarella, Lardons, Tomates",
   },
   {
     id: 5,
-    title: 'Diable',
-    content: 'Tomates, Mozarella, Chorizo piquant, Jalapenos',
+    title: "Diable",
+    content: "Tomates, Mozarella, Chorizo piquant, Jalapenos",
   },
 ];
 
@@ -36,28 +36,32 @@ const MENU = [
    GET /pizzas?order=title : ascending order by title
    GET /pizzas?order=-title : descending order by title
 */
-router.get('/', (req, res, next) => {
-  const orderByTitle =
-    req?.query?.order?.includes('title') ? req.query.order : undefined;
+router.get("/", (req, res, next) => {
+  const orderByTitle = req?.query?.order?.includes("title")
+    ? req.query.order
+    : undefined;
   let orderedMenu;
-  console.log(`order by ${orderByTitle ?? 'not requested'}`);
+  console.log(`order by ${orderByTitle ?? "not requested"}`);
 
   const pizzas = parse(jsonDbPath, MENU);
-  
-  if (orderByTitle) orderedMenu = [...pizzas].sort((a, b) => a.title.localeCompare(b.title));
-  if (orderByTitle === '-title') orderedMenu = orderedMenu.reverse();
 
-  console.log('GET /pizzas');
+  if (orderByTitle)
+    orderedMenu = [...pizzas].sort((a, b) => a.title.localeCompare(b.title));
+  if (orderByTitle === "-title") orderedMenu = orderedMenu.reverse();
+
+  console.log("GET /pizzas");
   return res.json(orderedMenu ?? pizzas);
 });
 
 // Read the pizza identified by an id in the menu
-router.get('/:id', (req, res) => {
+router.get("/:id", (req, res) => {
   console.log(`GET /pizzas/${req.params.id}`);
 
   const pizzas = parse(jsonDbPath, MENU);
 
-  const indexOfPizzaFound = pizzas.findIndex(pizza => pizza.id == req.params.id);
+  const indexOfPizzaFound = pizzas.findIndex(
+    (pizza) => pizza.id == req.params.id
+  );
 
   if (indexOfPizzaFound < 0) return res.sendStatus(404);
 
@@ -65,11 +69,12 @@ router.get('/:id', (req, res) => {
 });
 
 // Create a pizza to be added to the menu.
-router.post('/', (req, res) => {
+router.post("/", (req, res) => {
   const title = req?.body?.title?.length !== 0 ? req.body.title : undefined;
-  const content = req?.body?.content?.length !== 0 ? req.body.content : undefined;
+  const content =
+    req?.body?.content?.length !== 0 ? req.body.content : undefined;
 
-  console.log('POST /pizzas');
+  console.log("POST /pizzas");
 
   if (!title || !content) return res.sendStatus(400); // error code '400 Bad request'
 
@@ -92,12 +97,12 @@ router.post('/', (req, res) => {
 });
 
 // Delete a pizza from the menu based on its id
-router.delete('/:id', (req, res) => {
+router.delete("/:id", (req, res) => {
   console.log(`DELETE /pizzas/${req.params.id}`);
 
   const pizzas = parse(jsonDbPath, MENU);
 
-  const foundIndex = pizzas.findIndex(pizza => pizza.id == req.params.id);
+  const foundIndex = pizzas.findIndex((pizza) => pizza.id == req.params.id);
 
   if (foundIndex < 0) return res.sendStatus(404);
 
@@ -110,23 +115,24 @@ router.delete('/:id', (req, res) => {
 });
 
 // Update a pizza based on its id and new values for its parameters
-router.patch('/:id', (req, res) => {
+router.patch("/:id", (req, res) => {
   console.log(`PATCH /pizzas/${req.params.id}`);
 
   const title = req?.body?.title;
   const content = req?.body?.content;
 
-  console.log('POST /pizzas');
+  console.log("POST /pizzas");
 
-  if ((!title && !content) || title?.length === 0 || content?.length === 0) return res.sendStatus(400);
+  if ((!title && !content) || title?.length === 0 || content?.length === 0)
+    return res.sendStatus(400);
 
   const pizzas = parse(jsonDbPath, MENU);
 
-  const foundIndex = pizzas.findIndex(pizza => pizza.id == req.params.id);
+  const foundIndex = pizzas.findIndex((pizza) => pizza.id == req.params.id);
 
   if (foundIndex < 0) return res.sendStatus(404);
 
-  const updatedPizza = {...pizzas[foundIndex], ...req.body};
+  const updatedPizza = { ...pizzas[foundIndex], ...req.body };
 
   pizzas[foundIndex] = updatedPizza;
 

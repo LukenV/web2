@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fs = require("fs");
 
 /**
  * Parse items given in a .json file
@@ -36,7 +36,7 @@ function serialize(filePath, object) {
  * @param {String} filePath - path to the .json file
  */
 function createPotentialLastDirectory(filePath) {
-  const pathToLastDirectory = filePath.substring(0, filePath.lastIndexOf('/'));
+  const pathToLastDirectory = filePath.substring(0, filePath.lastIndexOf("/"));
 
   if (fs.existsSync(pathToLastDirectory)) return;
 
