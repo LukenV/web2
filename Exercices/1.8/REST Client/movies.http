@@ -32,7 +32,7 @@ Content-Type: application/json
 GET {{baseUrl}}/movies?page=2&limit=4
 
 ### Delete one movie
-DELETE {{baseUrl}}/movies/8
+DELETE {{baseUrl}}/movies/21
 
 ### Edit one movie
 PATCH {{baseUrl}}/movies/6
@@ -45,23 +45,23 @@ Content-Type: application/json
     "link" : "https://"
 }
 
-### Update the movie identified by 6
-PUT {{baseUrl}}/movies/23
+### Update the movie identified by 23
+PUT {{baseUrl}}/movies/19
 Content-Type: application/json
 
 {
-    "title" : "Megaman",
+    "title" : "Spider Man",
     "duration" : 129,
     "budget" : 333000,
-    "link" : "https://megaman.com"
+    "link" : "https://megaman.co"
 }
 
-### Update the pizza identified by 3
+### Update the movie identified by 3
 PUT {{baseUrl}}/movies/3
 Content-Type: application/json
 
 {
-    "title" : "Megaman",
+    "title" : "Megaaaaaa",
     "duration" : 129,
     "budget" : 333000,
     "link" : "https://megaman.com"
