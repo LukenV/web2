@@ -1,32 +1,28 @@
-const form = document.querySelector('form#form');
-const text = document.querySelector('p#text');
-const wish = document.querySelector('input#wish');
-const displayButton = document.querySelector('button#reDisplay');
+const form = document.querySelector("form#form");
+const text = document.querySelector("p#text");
+const wish = document.querySelector("input#wish");
+const displayButton = document.querySelector("button#reDisplay");
 
-form.addEventListener('submit', (e) => {
+form.addEventListener("submit", (e) => {
+  console.log("Form submitted");
 
-    console.log( "Form submitted" );
+  form.style.display = "none";
 
-    form.style.display = 'none';
+  text.innerHTML = `<p> ${wish.value} </p>`;
 
-    text.innerHTML = `<p> ${wish.value} </p>`;
+  wish.value = "";
 
-    wish.value = '';
+  displayButton.style.display = "block";
 
-    displayButton.style.display = 'block';
-
-    e.preventDefault();
-
+  e.preventDefault();
 });
 
-displayButton.addEventListener('click', (e) => {
+displayButton.addEventListener("click", (e) => {
+  console.log("button");
 
-    console.log( "button" );
+  displayButton.style.display = "none";
 
-    displayButton.style.display = 'none';
+  text.innerHTML = "";
 
-    text.innerHTML = '';
-
-    form.style.display = 'block';
-
+  form.style.display = "block";
 });

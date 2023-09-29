@@ -1,57 +1,45 @@
-const button = document.querySelector('button#clickMe');
-const currentClicks = document.querySelector('p#currentClicks');
+const button = document.querySelector("button#clickMe");
+const currentClicks = document.querySelector("p#currentClicks");
 const delayInSeconds = 5;
 const delayInMilliseconds = delayInSeconds * 1000;
 
 let interval;
 
 const startClock = () => {
+  if (!interval) {
+    console.log("TimeOut set");
 
-    if ( !interval ) {
+    interval = setTimeout(() => {
+      currentClicks.innerHTML = 0;
+      alert("Game over, you did not click 10 times within 5s !");
 
-        console.log( "TimeOut set" );
+      console.log("TimeOut ended");
 
-        interval = setTimeout(() => {
-
-            currentClicks.innerHTML = 0;
-            alert( "Game over, you did not click 10 times within 5s !" );
-
-            console.log( "TimeOut ended" );
-
-            interval = undefined;
-
-        }, delayInMilliseconds);
-
-    };
-
+      interval = undefined;
+    }, delayInMilliseconds);
+  }
 };
 
 const clearClock = () => {
-    
-    console.log( "TimeOut cleared" );
+  console.log("TimeOut cleared");
 
-    clearTimeout( interval );
+  clearTimeout(interval);
 
-    interval = undefined;
-
+  interval = undefined;
 };
 
-button.addEventListener('mouseover', startClock );
+button.addEventListener("mouseover", startClock);
 
-button.addEventListener('click', () => {
+button.addEventListener("click", () => {
+  let numberClicks = parseInt(currentClicks.innerHTML);
 
-    let numberClicks = parseInt( currentClicks.innerHTML );
+  currentClicks.innerHTML = ++numberClicks;
 
-    currentClicks.innerHTML = ++numberClicks;
+  if (numberClicks == 10) {
+    alert(`You win ! You clicked 10 times within ${interval} ms`);
 
-    if ( numberClicks == 10 ) {
+    currentClicks.innerHTML = 0;
 
-        alert( `You win ! You clicked 10 times within ${interval} ms` );
-
-        currentClicks.innerHTML = 0;
-
-        clearClock();
-
-    };
-
+    clearClock();
+  }
 });

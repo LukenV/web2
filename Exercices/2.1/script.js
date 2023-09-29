@@ -1,15 +1,13 @@
-const addDateTime = ( message ) => {
+const addDateTime = (message) => {
+  const dateTime = new Date();
+  const dateString = dateTime.toLocaleDateString();
+  const timeString = dateTime.toLocaleTimeString();
 
-    const dateTime = new Date();
-    const dateString = dateTime.toLocaleDateString();
-    const timeString = dateTime.toLocaleTimeString();
-
-    return `${dateString} ${timeString} ${message}`;
-
+  return `${dateString} ${timeString} ${message}`;
 };
 
-const string = addDateTime( "Bienvenue sur cette page web d'exercices !" );
+const string = addDateTime("Bienvenue sur cette page web d'exercices !");
 
-console.log( string );
+console.log(string);
 
-alert( string );
+alert(string);
