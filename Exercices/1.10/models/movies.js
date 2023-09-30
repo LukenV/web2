@@ -7,7 +7,7 @@ const jsonDbPath = __dirname + '/../data/movies.json';
 
 // "defaultMovies" array
 
-const defaultMovies = path.join(__dirname, '../utils/moviesArray.js');
+const defaultMovies = require( '../utils/moviesArray');
 
 function readAllMovies(orderTitle, minDuration, prefixTitle, page, limit) {
   console.log(
