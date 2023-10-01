@@ -2,37 +2,34 @@ const greenLight = document.getElementById("greenLight");
 const orangeLight = document.getElementById("orangeLight");
 const redLight = document.getElementById("redLight");
 
-let interval;
+const COLORS = [ "red", "orange", "green", "orange" ];
 
 let step = { number: 0 };
 
 const startClock = () => {
-  interval = setInterval(function() {
+  setInterval(function() {
     alternateColor(step);
   }, 2000);
 };
 
-const alternateColor = (step) => {
-  console.log("In alternate color\n\nStep n°" + step.number);
+const alternateColor = ( step ) => {
 
-  let number = step.number;
+  const color = COLORS[step.number];
+  const light = document.getElementById( color + "Light" );
 
-  if (number == 0) {
-    orangeLight.style.backgroundColor = "";
-    redLight.style.backgroundColor = "red";
-  } else if (number == 1) {
-    redLight.style.backgroundColor = "";
-    orangeLight.style.backgroundColor = "orange";
-  } else if (number == 2) {
-    orangeLight.style.backgroundColor = "";
-    greenLight.style.backgroundColor = "green";
-  } else if (number == 3) {
-    greenLight.style.backgroundColor = "";
-    orangeLight.style.backgroundColor = "orange";
-    step.number = 0;
-  }
+  let lastElementIndex = step.number - 1;
 
-  if (number != 3) step.number++;
+  if ( lastElementIndex < 0 ) lastElementIndex = COLORS.length - 1;
+
+  const lastColor = COLORS[lastElementIndex];
+  const lastLight = document.getElementById( lastColor + "Light" );
+
+  lastLight.style.backgroundColor = "";
+  light.style.backgroundColor = color;
+
+  if ( step.number === COLORS.length - 1 ) step.number = 0;
+  else step.number++;
+  
 };
 
 startClock();
