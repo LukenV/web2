@@ -1,0 +1,44 @@
+header {
+
+    display: block;
+    margin: 50px;
+
+}
+
+main {
+
+    display: flex;
+    margin: 100px;
+    justify-content: center;
+
+}
+
+div {
+
+    display: block;
+    margin: 25px;
+    text-align: center;
+    justify-self: center;
+
+}
+
+#title, h1 {
+
+    text-align: center;
+    margin: 50px;
+    
+}
+
+.image, img {
+
+    width: 30%;
+    height: auto;
+
+}
+
+.image, p { 
+
+    display: block;
+    margin: 45px;
+
+}
