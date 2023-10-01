@@ -7,7 +7,7 @@ const jsonDbPath = __dirname + '/../data/movies.json';
 
 // "defaultMovies" array
 
-const defaultMovies = require( '../utils/moviesArray');
+const defaultMovies = require('../utils/moviesArray');
 
 function readAllMovies(orderTitle, minDuration, prefixTitle, page, limit) {
   console.log(
@@ -269,8 +269,6 @@ function updateOneMovie(movieId, title, duration, budget, link) {
   };
 
   if (indexMovieFound < 0) {
-
-    console.log( "IM HERE BUT IM NOT SUPPOSED TO BE HERE")
     result.error = 404;
     return result;
   }

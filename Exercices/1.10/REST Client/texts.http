@@ -1,0 +1,77 @@
+######### NORMAL OPERATION  ###########
+
+@baseUrl = http://localhost:3000
+
+### Read all texts
+GET {{baseUrl}}/texts
+
+### Read all texts filtered by "easy" level
+GET {{baseUrl}}/texts?level=easy
+
+### Read all texts filtered by "medium" level
+GET {{baseUrl}}/texts?level=medium
+
+### Read all texts filtered by "hard" level
+GET {{baseUrl}}/texts?level=hard
+
+### Read text identified by "29d48985-9e09-4c6f-a583-3cea6388adc6"
+GET {{baseUrl}}/texts/29d48985-9e09-4c6f-a583-3cea6388adc6
+
+### Create a text
+POST {{baseUrl}}/texts
+Content-Type: application/json
+
+{
+    "level":"medium",
+    "content":"Ceci est un text non informatif."
+}
+
+### Delete text identified by "11f26ea4-82bc-45c6-af6e-dac4cb19bca5"
+DELETE {{baseUrl}}/texts/11f26ea4-82bc-45c6-af6e-dac4cb19bca5
+
+### Update the text identified by "44fa1618-8b3a-44f5-8fd5-89de2634901d"
+PUT {{baseUrl}}/texts/aaeec293-daa3-457f-9af9-135e8519d0de
+Content-Type: application/json
+
+{
+    "level" : "easy",
+    "content":"Le HTML N'EST PAS un langage de programmation."
+}
+
+######### ERROR OPERATION  ###########
+
+### Read text which does not exists
+GET {{baseUrl}}/texts/100
+
+### Create a text without level
+POST {{baseUrl}}/texts
+Content-Type: application/json
+
+{
+    "content":"Ceci est un text non informatif."
+}
+
+### Create a text without content
+POST {{baseUrl}}/texts
+Content-Type: application/json
+
+{
+    "level":"medium"
+}
+
+### Update for a text which does not exist
+PUT {{baseUrl}}/texts/200
+Content-Type: application/json
+
+{
+    "content":"Contenu non existant."
+}
+
+### Update for a text which does not provide any info for a property
+PUT {{baseUrl}}/texts/29d48985-9e09-4c6f-a583-3cea6388adc6
+Content-Type: application/json
+
+{
+    "level":"hard",
+    "content":""
+}
