@@ -15,7 +15,7 @@ const createRow = () => {
   return newRow;
 };
 
-const createTitle = ( titleText ) => {
+const createTitle = (titleText) => {
   const row = createRow();
 
   const divCol = document.createElement('div');
@@ -41,7 +41,7 @@ const createImage = (src) => {
   return image;
 };
 
-const createCard = (src, title, description ) => {
+const createCard = (src, title, description) => {
   const row = createRow();
 
   const divCol = document.createElement('div');
@@ -101,12 +101,10 @@ const createCard = (src, title, description ) => {
 
   cardText.innerText = description;
 
-  divCardRowCol2.appendChild( cardText );
-
+  divCardRowCol2.appendChild(cardText);
 };
 
-const createButton = ( text, method ) => {
-
+const createButton = (text, method) => {
   const button = document.createElement('button');
 
   button.innerText = text;
@@ -116,45 +114,42 @@ const createButton = ( text, method ) => {
   button.style.borderRadius = '15px';
   button.style.margin = 'auto';
 
-  button.addEventListener( 'click', method );
+  button.addEventListener('click', method);
 
   const divButton = document.createElement('div');
 
-  containerWrapper.appendChild( divButton );
+  containerWrapper.appendChild(divButton);
 
-  divButton.appendChild( button );
-
+  divButton.appendChild(button);
 };
 
 function createMainDisplay() {
+  containerWrapper.innerHTML = '';
 
-  containerWrapper.innerHTML = "";
+  const spiderManText =
+    "It's another movie of mission impossible,\neven if we had enough movies about it. But the revolution of this movie is that\nit is talking about A.I.";
+  const spiderManTitle = 'Spider Man - No Way Home';
 
-  const spiderManText = "It's another movie of mission impossible,\neven if we had enough movies about it. But the revolution of this movie is that\nit is talking about A.I.";
-  const spiderManTitle = "Spider Man - No Way Home";
+  const missionImpossibleText =
+    "It's another movie of mission impossible,\neven if we had enough movies about it. But the revolution of this movie is that\nit is talking about A.I.";
+  const missionImpossibleTitle = 'Mission Impossible - Dead Reckoning';
 
-  const missionImpossibleText = "It's another movie of mission impossible,\neven if we had enough movies about it. But the revolution of this movie is that\nit is talking about A.I.";
-  const missionImpossibleTitle = "Mission Impossible - Dead Reckoning";
+  createTitle('myMovies');
 
-  createTitle( "myMovies" );
+  createCard(noWayHome, spiderManTitle, spiderManText);
+  createCard(deadReckoning, missionImpossibleTitle, missionImpossibleText);
 
-  createCard(noWayHome, spiderManTitle, spiderManText );
-  createCard(deadReckoning, missionImpossibleTitle, missionImpossibleText );
-
-  createButton( "About", createSecondaryDisplay );
-
-};
+  createButton('About', createSecondaryDisplay);
+}
 
 function createSecondaryDisplay() {
+  containerWrapper.innerHTML = '';
 
-  containerWrapper.innerHTML = "";
+  createTitle('About');
 
-  createTitle( "About" );
+  createCard(lukenV, 'LukenV', "Hi, I'm a belgian student in computer science.");
 
-  createCard( lukenV, "LukenV", "Hi, I'm a belgian student in computer science." );
-
-  createButton( "Back", createMainDisplay );
-
-};
+  createButton('Back', createMainDisplay);
+}
 
 createMainDisplay();
