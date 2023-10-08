@@ -125,26 +125,24 @@ function checkInputsValues ( e ) {
 
   e.preventDefault();
 
-  const linesInput = document.getElementById('lines');
-
   let error = 0;
   let errorString = "";
 
-  if ( !Number.isNaN( Number(linesInput) ) || Number( linesInput ) <= 0 ) {
+  const linesInput = document.getElementById('lines');
 
-    console.log( "line input error " );
+  if ( Number.isNaN( Number(linesInput.value) ) || Number( linesInput.value ) <= 0 ) {
 
     error = 1;
 
-    if ( !Number.isNaN( Number(linesInput) ) ) {
+    if ( Number.isNaN( Number(linesInput.value) ) ) {
 
-      errorString += "linesInput is not a number.\n";
+      errorString += "The number of lines is not a number.\n";
 
     }
 
-    if ( Number( linesInput ) <= 0 ) {
+    if ( Number( linesInput.value ) <= 0 ) {
 
-      errorString += "linesInput is negative or equals to 0.\n";
+      errorString += "The number of lines is negative or equals to 0.\n";
 
     }
 
@@ -152,29 +150,25 @@ function checkInputsValues ( e ) {
 
   const columnsInput = document.getElementById('columns');
 
-  if ( !Number.isNaN( Number(columnsInput) ) || Number( columnsInput ) <= 0 ) {
-
-    console.log( "column input error " );
+  if ( Number.isNaN( Number( columnsInput.value ) ) || Number( columnsInput.value ) <= 0 ) {
 
     error = 1;
 
-    if ( !Number.isNaN( Number(columnsInput) ) ) {
+    if ( Number.isNaN( Number( columnsInput.value ) ) ) {
 
-      errorString += "columnsInput is not a number.\n";
+      errorString += "The number of columns is not a number.\n";
 
     }
 
-    if ( Number( columnsInput ) <= 0 ) {
+    if ( Number( columnsInput.value ) <= 0 ) {
 
-      errorString += "columnsInput is negative or equals to 0.\n";
+      errorString += "The number of columns is negative or equals to 0.\n";
 
     }
   
   };
 
-  if ( error === 1 ) {
-
-    console.log( "error" );
+  if ( error ) {
 
     const errorContainer = document.createElement('div');
 
@@ -188,15 +182,11 @@ function checkInputsValues ( e ) {
 
     if ( errorDiv ) {
 
-      console.log( "errorDiv exists" );
       errorDiv.innerText = '';
       
     } else {
 
-      console.log( "errorDiv created" );
-
       errorDiv = document.createElement('div');
-      errorDiv.style.backgroundColor = 'black';
       errorDiv.style.width = '100%';
       errorDiv.id = 'error';
       errorDiv.style.color = 'red';
@@ -209,8 +199,6 @@ function checkInputsValues ( e ) {
     bodyWrapper.appendChild( errorContainer );
 
   } else {
-
-    console.log( "no error" );
 
     const stringInput = document.getElementById('string');
     
