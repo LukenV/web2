@@ -1,5 +1,6 @@
 import { clearPage } from '../../utils/render';
 import { addOneMovie } from '../../utils/movies';
+import ViewMoviePage from './ViewMoviePage';
 
 const AddMoviePage = () => {
   clearPage();
@@ -91,7 +92,9 @@ function checkInputs(form) {
 
   const { title, duration, budget, link } = values;
 
-  console.log(JSON.stringify(addOneMovie(title, duration, budget, link)));
+  addOneMovie(title, duration, budget, link);
+
+  ViewMoviePage();
 
   return true;
 }
