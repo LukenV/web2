@@ -50,14 +50,10 @@ function getMoviesTableAsNode(movies) {
   const header4 = document.createElement('th');
   header4.innerText = 'Budget';
   header4.scope = 'col';
-  const header5 = document.createElement('th');
-  header5.innerText = 'Link';
-  header5.scope = 'col';
   header.appendChild(header1);
   header.appendChild(header2);
   header.appendChild(header3);
   header.appendChild(header4);
-  header.appendChild(header5);
   thead.appendChild(header);
 
   const tbody = document.createElement('tbody');
@@ -72,17 +68,17 @@ function getMoviesTableAsNode(movies) {
     id.innerText = movie.id;
     line.appendChild(id);
     const title = document.createElement('td');
+    const titleLink = document.createElement('a');
+    titleLink.href = movie.link;
+    titleLink.textContent = movie.title;
+    title.appendChild(titleLink);
     const duration = document.createElement('td');
     const budget = document.createElement('td');
-    const link = document.createElement('td');
-    title.innerText = movie.title;
     duration.innerText = movie.duration;
     budget.innerText = movie.budget;
-    link.innerText = movie.link;
     line.appendChild(title);
     line.appendChild(duration);
     line.appendChild(budget);
-    line.appendChild(link);
     tbody.appendChild(line);
   });
 
