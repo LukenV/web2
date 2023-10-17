@@ -1,6 +1,24 @@
+import { clearPage } from '../../utils/render';
+
 const HomePage = () => {
+  clearPage();
+  renderTitle();
+  renderContent();
+};
+
+function renderTitle() {
   const main = document.querySelector('main');
-  main.innerHTML = `<div class="container">
+
+  main.innerHTML += `
+  <h3 style="margin:30px;">
+    Home page
+  </h3>`;
+}
+
+function renderContent() {
+  const main = document.querySelector('main');
+
+  main.innerHTML += `<div class="container">
     <div class="row mb-3">
       <div class="col-md" style="padding:35px;">
         But I must explain to you how all this mistaken idea of
@@ -23,6 +41,6 @@ const HomePage = () => {
       </div>
     </div>
   </div>`;
-};
+}
 
 export default HomePage;

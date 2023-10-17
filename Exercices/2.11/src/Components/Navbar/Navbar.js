@@ -33,7 +33,7 @@ const Navbar = () => {
                 <a class="nav-link" style="color:#353935;" href="#" data-uri="/add">Add movie</a>
               </li>                        
               <li class="nav-item">
-                <a class="nav-link" style="color:#353935;" href="#" data-uri="/list">Movies list</a>
+                <a class="nav-link" style="color:#353935;" href="#" data-uri="/view">Movies list</a>
               </li>                        
             </ul>
           </div>

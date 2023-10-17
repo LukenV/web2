@@ -1,12 +1,4 @@
-import HomePage from '../Pages/HomePage';
-import AddMoviePage from '../Pages/AddMoviePage';
-import ViewMoviePage from '../Pages/ViewMoviePage';
-
-const routes = {
-  '/': HomePage,
-  '/add': AddMoviePage,
-  '/list': ViewMoviePage
-};
+import routes from './routes';
 
 const Router = () => {
   onFrontendLoad();
