@@ -73,7 +73,7 @@ const MOVIES = [
 
 function readAllMovies () {
 
-    return MOVIES;
+  return MOVIES;
 
 }
 
