@@ -1,0 +1,21 @@
+{
+  "name": "mymovies",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "debug": "nodemon ./bin/www",
+    "dev": "nodemon ./bin/www",
+    "start": "node ./bin/www"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "data/*"
+    ]
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "express": "^4.18.2",
+    "morgan": "^1.10.0",
+    "path": "^0.12.7"
+  }
+}
