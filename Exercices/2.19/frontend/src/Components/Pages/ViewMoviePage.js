@@ -1,20 +1,21 @@
 import { clearPage } from '../../utils/render';
+import { readAllMovies } from '../../utils/movies';
 
 const ViewMoviePage = async () => {
-  try {
-    clearPage();
 
-    const response = await fetch('https://localhost:3000/movies');
+  clearPage();
 
-    if (!response.ok) throw new Error(`fetch error : ${response.status} : ${response.statusText}`);
+  const movies = await readAllMovies();
 
-    const movies = await response.json();
+  for ( let i=0;i<movies.length; i+=1 ) {
 
-    renderTitle();
-    createTableMovies(movies);
-  } catch (err) {
-    console.error('HomePage::error: ', err);
-  }
+    console.log( JSON.stringify(movies[i]) );
+
+  };
+
+  renderTitle();
+  createTableMovies(movies);
+
 };
 
 function renderTitle() {
@@ -30,9 +31,9 @@ function renderTitle() {
 function createTableMovies (movies) {
 
   const main = document.querySelector('main');
+  const table = getMoviesTableAsNode( movies );
 
-  const table = getMoviesTableAsNode(movies);
-  main.appendChild(table);
+  main.appendChild( table );
 
 };
 
