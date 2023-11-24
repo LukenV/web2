@@ -9,6 +9,12 @@ const jsonDbPath = __dirname + '/../data/movies.json';
 
 const defaultMovies = require('../utils/moviesArray');
 
+function resetDatabase() {
+
+  serialize(jsonDbPath, defaultMovies);
+
+};
+
 function readAllMovies(orderTitle, minDuration, prefixTitle, page, limit) {
   console.log(
     `readAllMovies :\norderTitle : ${orderTitle}\nminDuration : ${minDuration}\nprefixTitle : ${prefixTitle}\npage : ${page}\nlimit : ${limit}`,
@@ -290,4 +296,5 @@ module.exports = {
   createOneMovie,
   deleteOneMovie,
   updateOneMovie,
+  resetDatabase
 };

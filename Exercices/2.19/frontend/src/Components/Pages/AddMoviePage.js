@@ -1,23 +1,13 @@
-import { clearPage } from '../../utils/render';
-// import ViewMoviePage from './ViewMoviePage';
-import Navigate from '../Router/Navigate';
+import { clearPage, renderTitle } from '../../utils/render';
+import ViewMoviePage from './ViewMoviePage';
 import { addOneMovie } from '../../utils/movies';
 
 const AddMoviePage = () => {
   clearPage();
-  renderTitle();
+  renderTitle( "Add movie" );
   renderForm();
   addFormListener();
 };
-
-function renderTitle() {
-  const main = document.querySelector('main');
-
-  main.innerHTML = `
-    <h3 style="margin:30px;">
-      Add movie
-    </h3>`;
-}
 
 function renderForm() {
   const main = document.querySelector('main');
@@ -50,7 +40,7 @@ function renderForm() {
           </div>
 
           <div class="col-md" style="padding:10px;">
-            <input type="submit" class="btn btn-primary mb-2" value="Send">
+            <input type="submit" class="btn btn-primary mb-2" value="Add movie">
           </div>
 
         </form>
@@ -93,24 +83,9 @@ async function checkInputs(form) {
 
   const { title, duration, budget, link } = values;
 
-  const options = {
-    method: 'POST',
-    body: JSON.stringify({
-      title,
-      duration,
-      budget,
-      link
-    }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
+  addOneMovie( title, duration, budget, link );
 
-  addOneMovie( options );
-
-  Navigate('/');
-
-  // ViewMoviePage();
+  ViewMoviePage();
 
   return true;
 }

@@ -7,6 +7,7 @@ const {
   createOneMovie,
   deleteOneMovie,
   updateOneMovie,
+  resetDatabase,
 } = require('../models/movies.js');
 
 // GET movies listing
@@ -31,6 +32,13 @@ router.get('/', (req, res, next) => {
   }
 
   return res.json(list);
+});
+
+router.get('/reset', (req, res, next) => {
+
+  resetDatabase();
+
+  return res.json("Database successfuly reset !");
 });
 
 // GET one movie by its id

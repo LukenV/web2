@@ -1,5 +1,5 @@
-import { clearPage } from '../../utils/render';
-import { readAllMovies } from '../../utils/movies';
+import { clearPage, renderTitle } from '../../utils/render';
+import { readAllMovies, deleteOneMovie, updateOneMovie } from '../../utils/movies';
 
 const ViewMoviePage = async () => {
 
@@ -7,24 +7,8 @@ const ViewMoviePage = async () => {
 
   const movies = await readAllMovies();
 
-  for ( let i=0;i<movies.length; i+=1 ) {
-
-    console.log( JSON.stringify(movies[i]) );
-
-  };
-
-  renderTitle();
+  renderTitle( "Movies list" );
   createTableMovies(movies);
-
-};
-
-function renderTitle() {
-  const main = document.querySelector('main');
-
-  main.innerHTML += `
-  <h3 style="margin:30px;">
-    Movies list
-  </h3>`;
 
 };
 
@@ -35,6 +19,8 @@ function createTableMovies (movies) {
 
   main.appendChild( table );
 
+  addListenersToButtons();
+
 };
 
 function getMoviesTableAsNode(movies) {
@@ -42,27 +28,31 @@ function getMoviesTableAsNode(movies) {
   tableWrapper.className = 'container';
   tableWrapper.style.padding = '20px';
   const table = document.createElement('table');
-  table.className = 'table table-hover';
+  table.className = 'table table-hover table-striped';
 
   const thead = document.createElement('thead');
   table.appendChild(thead);
   const header = document.createElement('tr');
-  const header1 = document.createElement('th');
-  header1.innerText = '#';
-  header1.scope = 'col';
-  const header2 = document.createElement('th');
-  header2.innerText = 'Title';
-  header2.scope = 'col';
-  const header3 = document.createElement('th');
-  header3.innerText = 'Duration';
-  header3.scope = 'col';
-  const header4 = document.createElement('th');
-  header4.innerText = 'Budget';
-  header4.scope = 'col';
-  header.appendChild(header1);
-  header.appendChild(header2);
-  header.appendChild(header3);
-  header.appendChild(header4);
+  header.innerHTML = `
+    <tr>
+      <th scope="col">
+        #
+      </th>
+      <th scope="col">
+        Title
+      </th>
+      <th scope="col">
+        Link
+      </th>
+      <th scope="col">
+        Duration
+      </th>
+      <th scope="col">
+        Budget
+      </th>
+      <th scope="col"></th>
+    </tr>
+  `;
   thead.appendChild(header);
 
   const tbody = document.createElement('tbody');
@@ -71,27 +61,173 @@ function getMoviesTableAsNode(movies) {
   
 
   movies?.forEach((movie) => {
-    const line = document.createElement('tr');
-    const id = document.createElement('th');
-    id.scope = 'row';
-    id.innerText = movie.id;
-    line.appendChild(id);
-    const title = document.createElement('td');
-    const titleLink = document.createElement('a');
-    titleLink.href = movie.link;
-    titleLink.textContent = movie.title;
-    title.appendChild(titleLink);
-    const duration = document.createElement('td');
-    const budget = document.createElement('td');
-    duration.innerText = movie.duration;
-    budget.innerText = movie.budget;
-    line.appendChild(title);
-    line.appendChild(duration);
-    line.appendChild(budget);
-    tbody.appendChild(line);
+
+    const line = `
+    <tr class="movieLine">
+      <th scope="row">${movie.id}</th>
+      <td id="title" data-is-updatable="1">
+        ${movie.title}
+      </td>
+      <td id="link" data-is-updatable="1">
+        ${movie.link}
+      </td>
+      <td id="duration" data-is-updatable="1">
+        ${movie.duration}
+      </td>
+      <td id="budget" data-is-updatable="1">
+        ${movie.budget}
+      </td>
+      <td>
+        <button type="button" class="btn btn-danger delete" data-element-id="${movie.id}">Delete</button>
+        <button type="button" class="btn btn-primary update" data-element-id="${movie.id}">Update</button>
+        <button type="button" class="btn btn-primary save" style="display:none;" data-element-id="${movie.id}">Save</button>
+      </td>
+    </tr>`
+
+    tbody.innerHTML += line;
+
   });
 
   return tableWrapper;
+}
+
+function addListenerToDeleteButtons() {
+
+  const deleteButtons = document.querySelectorAll(".delete");
+
+  deleteButtons.forEach( button => {
+
+    button.addEventListener("click", (e) => {
+
+      const movieId = Number( e.target.dataset.elementId );
+  
+      deleteOneMovie( movieId );
+
+      ViewMoviePage();
+
+    });
+
+    return true;
+
+  });
+
+};
+
+function addListenerToUpdateButtons() {
+
+  const updateButtons = document.querySelectorAll(".update");
+
+  updateButtons.forEach( button => {
+    
+    button.addEventListener("click", () => {
+
+      const updatableColumns = getColumnsOfButtonLine(button);
+
+      updatableColumns.forEach( column => {
+
+        if ( column.dataset.isUpdatable === "1" ) {
+
+          const copyColumn = column;
+
+          copyColumn.contentEditable = true;
+          
+        };
+
+      });
+
+      const updateButton = button;
+      updateButton.style.display = "none";
+
+      const saveButton = getSaveButton(updateButton);
+      saveButton.style.display = "block";
+
+    });
+
+    return true;
+
+  });
+
+};
+
+function addListenerToSaveButtons() {
+
+  const saveButtons = document.querySelectorAll(".save");
+
+  saveButtons.forEach( button => {
+  
+    button.addEventListener("click", () => {
+
+      const columns = getColumnsOfButtonLine(button);
+      const values = {};
+
+      columns.forEach( column => {
+
+        if ( column.dataset.isUpdatable === "1" ) {
+
+          const copyColumn = column;
+
+          copyColumn.contentEditable = false;
+          values[column.id] = column.innerText;
+          
+        };
+
+      });
+
+      console.log( JSON.stringify( values ) );
+
+      const saveButton = button;
+      saveButton.style.display = "none";
+
+      const updateButton = getUpdateButton(saveButton);
+      updateButton.style.display = "block";
+
+      const { title, duration, budget, link } = values;
+      const id = button.dataset.elementId;
+
+      updateOneMovie( id, title, duration, budget, link );
+
+      ViewMoviePage();
+
+    });
+
+  });
+
+};
+
+function getSaveButton(updateButton) {
+
+  const parent = updateButton.parentNode;
+  const saveButton = parent.querySelector('.save');
+
+  return saveButton;
+
+}
+
+function getUpdateButton(saveButton) {
+
+  const parent = saveButton.parentNode;
+  const updateButton = parent.querySelector('.update');
+
+  return updateButton;
+  
+}
+
+function getColumnsOfButtonLine(button) {
+
+  const buttonColumnParent = button.parentNode;
+  const buttonLineParent = buttonColumnParent.parentNode;
+
+  const columns = buttonLineParent.querySelectorAll("td");
+  return columns;
+
+}
+
+function addListenersToButtons() {
+
+  addListenerToDeleteButtons();
+  addListenerToUpdateButtons();
+  addListenerToSaveButtons();
+
 }
 
 export default ViewMoviePage;

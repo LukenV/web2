@@ -1,19 +1,10 @@
-import { clearPage } from '../../utils/render';
+import { clearPage, renderTitle } from '../../utils/render';
 
 const HomePage = () => {
   clearPage();
-  renderTitle();
+  renderTitle( "Home page" );
   renderContent();
 };
-
-function renderTitle() {
-  const main = document.querySelector('main');
-
-  main.innerHTML += `
-  <h3 style="margin:30px;">
-    Home page
-  </h3>`;
-}
 
 function renderContent() {
   const main = document.querySelector('main');
