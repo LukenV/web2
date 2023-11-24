@@ -8,6 +8,7 @@ const routes = {
   '/register': RegisterPage,
 };
 
+
 const Router = () => {
   onFrontendLoad();
   onNavBarClick();

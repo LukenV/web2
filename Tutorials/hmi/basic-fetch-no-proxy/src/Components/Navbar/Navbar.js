@@ -32,7 +32,7 @@ function renderNavbar() {
               </li>
               <li id="registerItem" class="nav-item">
                 <a class="nav-link" href="#" data-uri="/register">Register</a>
-              </li>           
+              </li>    
             </ul>
           </div>
         </div>
