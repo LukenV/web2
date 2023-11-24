@@ -222,8 +222,6 @@ function getColumnsOfButtonLine(button) {
 
 }
 
-//
-
 function addListenersToButtons() {
 
   addListenerToDeleteButtons();
